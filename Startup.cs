@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TodoApi.Models;
-using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.OpenApi.Models;
 
 namespace TodoApi
 {
@@ -13,10 +13,11 @@ namespace TodoApi
             services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("TodoList"));
             services.AddMvc();
 
+            services.AddControllers();
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
             });
         }
 
@@ -34,7 +35,10 @@ namespace TodoApi
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
-            app.UseMvc();
+            app.UseRouting();
+            app.UseCors();
+
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
 }
